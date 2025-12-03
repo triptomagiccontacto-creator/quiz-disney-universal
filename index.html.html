@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Disney o Universal? - Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #063573 0%, #2594D9 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #063573 0%, #0B6BBF 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .tagline {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px 25px;
+        }
+        
+        .welcome-screen h1 {
+            color: #063573;
+            font-size: 26px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .welcome-screen p {
+            color: #0B6BBF;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .question-container {
+            display: none;
+        }
+        
+        .question-container.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #BBD3F2;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #063573 0%, #2594D9 100%);
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+        
+        .question-number {
+            color: #2594D9;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .question-text {
+            color: #063573;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .option {
+            background: #F2F2F2;
+            border: 3px solid transparent;
+            padding: 18px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 15px;
+            color: #063573;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .option:hover {
+            background: #BBD3F2;
+            border-color: #2594D9;
+            transform: translateX(5px);
+        }
+        
+        .option-emoji {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #063573 0%, #2594D9 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(6, 53, 115, 0.3);
+        }
+        
+        .result-screen {
+            display: none;
+            text-align: center;
+        }
+        
+        .result-screen.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        .result-emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounce 1s;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .result-title {
+            color: #063573;
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .result-subtitle {
+            color: #2594D9;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .result-description {
+            background: #BBD3F2;
+            padding: 20px;
+            border-radius: 12px;
+            color: #063573;
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+        
+        .cta-box {
+            background: linear-gradient(135deg, #2594D9 0%, #0B6BBF 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .cta-box h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .cta-box p {
+            font-size: 14px;
+            margin-bottom: 20px;
+            opacity: 0.95;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #BBD3F2;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #063573;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2594D9;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        a {
+            display: block;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">TRIP TO MAGIC</div>
+            <div class="tagline">Tu agente Disney y Universal</div>
+        </div>
+        
+        <div class="content">
+            <!-- Pantalla de bienvenida -->
+            <div class="welcome-screen" id="welcomeScreen">
+                <h1>🎢 ¿Disney o Universal? 🏰</h1>
+                <p>Responde 6 preguntas rápidas y descubre qué parque es perfecto para ti y tu familia</p>
+                <button class="btn btn-primary" onclick="startQuiz()">¡Empezar Quiz! ✨</button>
+            </div>
+            
+            <!-- Pantalla de preguntas -->
+            <div class="question-container" id="quizScreen">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar"></div>
+                </div>
+                
+                <div class="question-number" id="questionNumber"></div>
+                <div class="question-text" id="questionText"></div>
+                
+                <div class="options" id="optionsContainer"></div>
+            </div>
+            
+            <!-- Pantalla de resultado -->
+            <div class="result-screen" id="resultScreen">
+                <div class="result-emoji" id="resultEmoji"></div>
+                <div class="result-title" id="resultTitle"></div>
+                <div class="result-subtitle" id="resultSubtitle"></div>
+                <div class="result-description" id="resultDescription"></div>
+                
+                <div class="cta-box">
+                    <h3>✨ ¿Lista para tu viaje mágico?</h3>
+                    <p>Da clic en el botón y completa el formulario de cotización. Te responderé en menos de 24 horas con una propuesta personalizada 100% GRATIS 🎁</p>
+                    
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdlx2q9bst2XKV3sMM3xU5mKFZbulqpll6csde2z74QFLbRfQ/viewform" target="_blank" style="text-decoration: none;">
+                        <button class="btn btn-primary" style="background: white; color: #063573; font-size: 18px;">
+                            📝 Solicitar mi cotización GRATIS
+                        </button>
+                    </a>
+                    
+                    <p style="font-size: 12px; margin-top: 15px; opacity: 0.9;">
+                        💙 Precios oficiales + Descuentos exclusivos<br>
+                        💙 Planificación e itinerario incluido<br>
+                        💙 Asistencia 24/7 durante tu viaje
+                    </p>
+                </div>
+                
+                <button class="btn btn-primary" onclick="restartQuiz()" style="margin-top: 15px; background: #F2F2F2; color: #063573;">
+                    🔄 Hacer el quiz de nuevo
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const questions = [
+            {
+                question: "¿Con quién viajas?",
+                options: [
+                    { text: "Niños pequeños (2-7 años)", emoji: "👶", value: "disney" },
+                    { text: "Niños mayores/adolescentes (8+)", emoji: "🧒", value: "neutral" },
+                    { text: "Solo adultos/parejas", emoji: "👫", value: "neutral" },
+                    { text: "Grupo multigeneracional", emoji: "👨‍👩‍👧‍👦", value: "disney" }
+                ]
+            },
+            {
+                question: "¿Qué tipo de experiencia buscas?",
+                options: [
+                    { text: "Magia, nostalgia y personajes", emoji: "✨", value: "disney" },
+                    { text: "Adrenalina y tecnología", emoji: "🎢", value: "universal" },
+                    { text: "Shows y entretenimiento", emoji: "🎭", value: "disney" },
+                    { text: "Montañas rusas extremas", emoji: "⚡", value: "universal" }
+                ]
+            },
+            {
+                question: "¿Cuántos días tienes disponibles?",
+                options: [
+                    { text: "2-3 días", emoji: "⏰", value: "universal" },
+                    { text: "4-5 días", emoji: "📅", value: "neutral" },
+                    { text: "6+ días", emoji: "🗓️", value: "disney" },
+                    { text: "No estoy seguro aún", emoji: "🤔", value: "neutral" }
+                ]
+            },
+            {
+                question: "¿Fan de alguna franquicia?",
+                options: [
+                    { text: "Harry Potter 100%", emoji: "⚡", value: "universal" },
+                    { text: "Princesas y clásicos Disney", emoji: "👸", value: "disney" },
+                    { text: "Marvel, Star Wars, Pixar", emoji: "🦸", value: "disney" },
+                    { text: "Jurassic Park, Minions", emoji: "🦖", value: "universal" }
+                ]
+            },
+            {
+                question: "¿Es tu primera vez en Orlando?",
+                options: [
+                    { text: "Sí, primera vez", emoji: "🎊", value: "disney" },
+                    { text: "Ya fui a Disney, quiero algo nuevo", emoji: "🔄", value: "universal" },
+                    { text: "Ya fui a Universal", emoji: "✅", value: "disney" },
+                    { text: "Conozco ambos", emoji: "🌟", value: "neutral" }
+                ]
+            },
+            {
+                question: "¿Qué es más importante para ti?",
+                options: [
+                    { text: "Experiencia completa e inmersiva", emoji: "🏰", value: "disney" },
+                    { text: "Atracciones de última tecnología", emoji: "🎮", value: "universal" },
+                    { text: "Algo que todos disfruten", emoji: "💙", value: "disney" },
+                    { text: "Máxima emoción y adrenalina", emoji: "🔥", value: "universal" }
+                ]
+            }
+        ];
+        
+        let currentQuestion = 0;
+        let disneyScore = 0;
+        let universalScore = 0;
+        
+        function startQuiz() {
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('quizScreen').classList.add('active');
+            showQuestion();
+        }
+        
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('questionNumber').textContent = `Pregunta ${currentQuestion + 1} de ${questions.length}`;
+            document.getElementById('questionText').textContent = question.question;
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach(option => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.innerHTML = `
+                    <span class="option-emoji">${option.emoji}</span>
+                    <span>${option.text}</span>
+                `;
+                optionDiv.onclick = () => selectAnswer(option.value);
+                optionsContainer.appendChild(optionDiv);
+            });
+        }
+        
+        function selectAnswer(value) {
+            if (value === 'disney') {
+                disneyScore++;
+            } else if (value === 'universal') {
+                universalScore++;
+            }
+            
+            currentQuestion++;
+            
+            if (currentQuestion < questions.length) {
+                document.getElementById('quizScreen').classList.remove('active');
+                setTimeout(() => {
+                    document.getElementById('quizScreen').classList.add('active');
+                    showQuestion();
+                }, 300);
+            } else {
+                showResult();
+            }
+        }
+        
+        function showResult() {
+            document.getElementById('quizScreen').style.display = 'none';
+            document.getElementById('resultScreen').classList.add('active');
+            
+            const isDisney = disneyScore >= universalScore;
+            
+            if (isDisney) {
+                document.getElementById('resultEmoji').textContent = '🏰';
+                document.getElementById('resultTitle').textContent = '¡DISNEY es para ti!';
+                document.getElementById('resultSubtitle').textContent = 'La magia te está esperando ✨';
+                document.getElementById('resultDescription').innerHTML = `
+                    <strong>¿Por qué Disney?</strong><br><br>
+                    Basándome en tus respuestas, Disney World es tu mejor opción. Ofrece la experiencia completa que buscas: magia para toda la familia, variedad infinita de atracciones, shows espectaculares y esa atmósfera única que solo Disney puede crear.<br><br>
+                    Con 4 parques temáticos, 2 parques acuáticos y experiencias para todas las edades, Disney te garantiza recuerdos que durarán toda la vida. 💫
+                `;
+            } else {
+                document.getElementById('resultEmoji').textContent = '⚡';
+                document.getElementById('resultTitle').textContent = '¡UNIVERSAL es para ti!';
+                document.getElementById('resultSubtitle').textContent = '¡Prepárate para la aventura! 🎢';
+                document.getElementById('resultDescription').innerHTML = `
+                    <strong>¿Por qué Universal?</strong><br><br>
+                    Según tus respuestas, Universal Orlando es perfecto para ti. Buscas emoción, tecnología de punta y experiencias más intensas. Con atracciones como el mundo de Harry Potter, montañas rusas épicas y simuladores de última generación, Universal te dará la dosis de adrenalina que necesitas.<br><br>
+                    Más compacto que Disney pero igual de increíble, Universal es ideal para quienes quieren vivir la acción al máximo. 🔥
+                `;
+            }
+        }
+        
+        function restartQuiz() {
+            currentQuestion = 0;
+            disneyScore = 0;
+            universalScore = 0;
+            
+            document.getElementById('resultScreen').classList.remove('active');
+            document.getElementById('resultScreen').style.display = 'none';
+            
+            document.getElementById('welcomeScreen').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
